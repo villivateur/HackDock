@@ -8,69 +8,40 @@ LedPanel::LedPanel()
     digitalWrite(LED_FUN_1_PIN, HIGH);
 }
 
-static void Led0BlinkTask()
-{
-    digitalWrite(LED_FUN_0_PIN, !digitalRead(LED_FUN_0_PIN));     // set pin to the opposite state
-}
-
-static void Led1BlinkTask()
-{
-    digitalWrite(LED_FUN_1_PIN, !digitalRead(LED_FUN_1_PIN));     // set pin to the opposite state
-}
-
-void LedPanel::SetBlinkRate(Ticker* flipper, std::function<void(void)> func, LedBlinkRate rate)
-{
-    switch (rate)
-    {
-    case LedBlinkRate::Rate8Hz:
-        flipper->attach(0.0625, func);        
-        break;
-    case LedBlinkRate::Rate2Hz:
-        flipper->attach(0.25, func);        
-        break;
-    case LedBlinkRate::Rate0_5Hz:
-        flipper->attach(1.0, func);        
-        break;
-    default:
-        break;
-    }
-}
-
 void LedPanel::SetLed(uint8_t ledNum, LedBlinkRate rate)
 {
+    uint8_t pin;
+    
     switch (ledNum)
     {
     case 0:
-        switch (rate)
-        {
-        case LedBlinkRate::RateAlwaysOn:
-            ledFlipper_0.detach();
-            digitalWrite(LED_FUN_0_PIN, LOW);
-            break;
-        case LedBlinkRate::RateAlwaysOff:
-            ledFlipper_0.detach();
-            digitalWrite(LED_FUN_0_PIN, HIGH);
-            break;
-        default:
-            SetBlinkRate(&ledFlipper_0, Led0BlinkTask, rate);
-            break;
-        }
+        pin = LED_FUN_0_PIN;
         break;
     case 1:
-        switch (rate)
-        {
-        case LedBlinkRate::RateAlwaysOn:
-            ledFlipper_1.detach();
-            digitalWrite(LED_FUN_1_PIN, LOW);
-            break;
-        case LedBlinkRate::RateAlwaysOff:
-            ledFlipper_1.detach();
-            digitalWrite(LED_FUN_1_PIN, HIGH);
-            break;
-        default:
-            SetBlinkRate(&ledFlipper_1, Led1BlinkTask, rate);
-            break;
-        }
+        pin = LED_FUN_1_PIN;
+        break;
+    default:
+        return;
+    }
+
+    switch (rate)
+    {
+    case LedBlinkRate::RateAlwaysOn:
+        ticker.detach();
+        digitalWrite(pin, LOW);
+        break;
+    case LedBlinkRate::Rate8Hz:
+        ticker.attach_ms(62, [&pin]() {digitalWrite(pin, !digitalRead(pin));}); // 62.5ms is not allowed
+        break;
+    case LedBlinkRate::Rate2Hz:
+        ticker.attach_ms(250, [&pin]() {digitalWrite(pin, !digitalRead(pin));});
+        break;
+    case LedBlinkRate::Rate0_5Hz:
+        ticker.attach_ms(1000, [&pin]() {digitalWrite(pin, !digitalRead(pin));});
+        break;
+    case LedBlinkRate::RateAlwaysOff:
+        ticker.detach();
+        digitalWrite(pin, HIGH);
         break;
     default:
         break;

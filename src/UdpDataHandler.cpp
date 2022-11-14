@@ -9,9 +9,11 @@ UdpDataHandler::UdpDataHandler()
     data = (UdpData*)(packRecv + 4);
     uint32_t port = 32737;
     Udp.begin(port);
+
+    ticker.attach_ms(50, std::bind(&UdpDataHandler::UdpTask, this));
 }
 
-void UdpDataHandler::FetchNewData()
+void UdpDataHandler::UdpTask()
 {
     int packetSize = Udp.parsePacket();
     if (packetSize) {

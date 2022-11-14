@@ -6,6 +6,7 @@ class FuncButton
 private:
     Ticker scanner;
     uint32_t lastPressTimeMs;
+    void Scan();
 
 public:
     FuncButton();

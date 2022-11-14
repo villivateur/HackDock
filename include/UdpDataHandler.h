@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
+#include <Ticker.h>
 
 struct UdpData
 {
@@ -18,7 +19,8 @@ class UdpDataHandler
 {
 public:
     UdpDataHandler();
-    void FetchNewData();
+    void UdpTask();
+    Ticker ticker;
     UdpData* data;
 
 private:

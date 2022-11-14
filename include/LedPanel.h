@@ -17,9 +17,7 @@ enum class LedBlinkRate : uint8_t
 class LedPanel
 {
 private:
-    Ticker ledFlipper_0;
-    Ticker ledFlipper_1;
-    void SetBlinkRate(Ticker* flipper, std::function<void(void)> func, LedBlinkRate rate);
+    Ticker ticker;
 
 public:
     LedPanel();

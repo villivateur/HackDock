@@ -14,7 +14,8 @@ enum class BeepStatus : uint8_t
 class Beep
 {
 private:
-    Ticker beepTicker;
+    Ticker ticker;
+    void BeepTask();
 
 public:
     Beep();

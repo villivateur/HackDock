@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <Ticker.h>
 
-#define LED_FUN_0_PIN 7
-#define LED_FUN_1_PIN 6
+#define LED_NUM 2
+
+#define LED_FUN_0_PIN 13
+#define LED_FUN_1_PIN 12
 
 
 enum class LedBlinkRate : uint8_t
@@ -14,10 +16,16 @@ enum class LedBlinkRate : uint8_t
     RateAlwaysOff,
 };
 
+struct LedItem
+{
+    Ticker ticker;
+    uint8_t pin;
+};
+
 class LedPanel
 {
 private:
-    Ticker ticker;
+    LedItem leds[LED_NUM];
 
 public:
     LedPanel();

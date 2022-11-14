@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Ticker.h>
 
-#define BEEP_PIN 8
+#define BEEP_PIN 15
 
 
 enum class BeepStatus : uint8_t

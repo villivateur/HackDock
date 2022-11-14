@@ -2,23 +2,26 @@
 
 LedPanel::LedPanel()
 {
-    pinMode(LED_FUN_0_PIN, OUTPUT);
-    digitalWrite(LED_FUN_0_PIN, HIGH);
-    pinMode(LED_FUN_1_PIN, OUTPUT);
-    digitalWrite(LED_FUN_1_PIN, HIGH);
+    leds[0].pin = LED_FUN_0_PIN;
+    leds[1].pin = LED_FUN_1_PIN;
+
+    for (int i = 0; i < LED_NUM; i++) {
+        pinMode(leds[i].pin, OUTPUT);
+        digitalWrite(leds[i].pin, HIGH);
+    }
 }
 
 void LedPanel::SetLed(uint8_t ledNum, LedBlinkRate rate)
 {
-    uint8_t pin;
+    LedItem* led;
     
     switch (ledNum)
     {
     case 0:
-        pin = LED_FUN_0_PIN;
+        led = &(leds[0]);
         break;
     case 1:
-        pin = LED_FUN_1_PIN;
+        led = &(leds[1]);
         break;
     default:
         return;
@@ -27,21 +30,24 @@ void LedPanel::SetLed(uint8_t ledNum, LedBlinkRate rate)
     switch (rate)
     {
     case LedBlinkRate::RateAlwaysOn:
-        ticker.detach();
-        digitalWrite(pin, LOW);
+        led->ticker.detach();
+        digitalWrite(led->pin, LOW);
         break;
     case LedBlinkRate::Rate8Hz:
-        ticker.attach_ms(62, [&pin]() {digitalWrite(pin, !digitalRead(pin));}); // 62.5ms is not allowed
+        Serial.println("Rate8Hz");
+        led->ticker.attach_ms(62, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));}); // 62.5ms is not allowed
         break;
     case LedBlinkRate::Rate2Hz:
-        ticker.attach_ms(250, [&pin]() {digitalWrite(pin, !digitalRead(pin));});
+        Serial.println("Rate2Hz");
+        led->ticker.attach_ms(250, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));});
         break;
     case LedBlinkRate::Rate0_5Hz:
-        ticker.attach_ms(1000, [&pin]() {digitalWrite(pin, !digitalRead(pin));});
+        Serial.println("Rate0_5Hz");
+        led->ticker.attach_ms(1000, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));});
         break;
     case LedBlinkRate::RateAlwaysOff:
-        ticker.detach();
-        digitalWrite(pin, HIGH);
+        led->ticker.detach();
+        digitalWrite(led->pin, HIGH);
         break;
     default:
         break;

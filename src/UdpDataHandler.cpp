@@ -1,36 +1,22 @@
-#include "LocalConnector.h"
-#include "StatusLed.h"
-#include "UserData.h"
+#include "UdpDataHandler.h"
+#include "LedPanel.h"
+#include "ParamManager.h"
 
-extern UserData* userdataManager;
-extern StatusLed* statusLed;
+static uint8_t packRecv[256];
 
-static byte packRecv[256];
-
-LocalConnector::LocalConnector()
+UdpDataHandler::UdpDataHandler()
 {
-    WiFi.begin(userdataManager->GetWifiSsid(), userdataManager->GetWifiPasswd());
-
-    statusLed->SetBlinkRate(StatusLed::BlinkRate::Rate2Hz);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(1000);
-    }
-    statusLed->SetBlinkRate(StatusLed::BlinkRate::RateAlwaysOff);
-
-    delay(2000);
-
     data = (UdpData*)(packRecv + 4);
     uint32_t port = 32737;
     Udp.begin(port);
 }
 
-void LocalConnector::FetchNewData()
+void UdpDataHandler::FetchNewData()
 {
     int packetSize = Udp.parsePacket();
     if (packetSize) {
         int len = Udp.read(packRecv, 255);
-        byte packSend[2];
+        uint8_t packSend[2];
 
         if (len <= 0) {
             return;

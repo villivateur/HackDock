@@ -1,9 +1,9 @@
-#include "UserData.h"
+#include "ParamManager.h"
 #include <EEPROM.h>
 
 #define MAX_USER_DATA_SIZE 0x200
 
-#define WIFI_INFO_VALID_MAGIC 0xaa
+#define USER_DATA_VALID_MAGIC 0xaa
 
 #define WIFI_INFO_VALID_OFFSET 0x00
 #define WIFI_SSID_VALID 0x20
@@ -11,12 +11,12 @@
 
 #define RUN_MODE_OFFSET 0x60
 
-UserData::UserData()
+ParamManager::ParamManager()
 {
     EEPROM.begin(MAX_USER_DATA_SIZE);
 }
 
-String UserData::ReadEepromString(uint32_t offset)
+String ParamManager::ReadEepromString(uint32_t offset)
 {
     String result;
     char readByte;
@@ -27,7 +27,7 @@ String UserData::ReadEepromString(uint32_t offset)
     return result;
 }
 
-void UserData::WriteEepromString(String data, uint32_t offset)
+void ParamManager::WriteEepromString(String data, uint32_t offset)
 {
     for (uint32_t i = 0; i < data.length(); i++) {
         EEPROM.write(i + offset, data[i]);
@@ -35,52 +35,40 @@ void UserData::WriteEepromString(String data, uint32_t offset)
     EEPROM.write(data.length() + offset, 0x00);
 }
 
-void UserData::EraseAllData()
+void ParamManager::EraseAllData()
 {
     EEPROM.write(WIFI_INFO_VALID_OFFSET, 0x00);
     EEPROM.commit();
 }
 
-RunMode UserData::GetRunMode()
-{
-    mode = EEPROM.read(RUN_MODE_OFFSET);
-    return (RunMode)mode;
-}
-
-void UserData::SetRunMode(RunMode mode)
-{
-    EEPROM.write(RUN_MODE_OFFSET, (byte)mode);
-    EEPROM.commit();
-}
-
-bool UserData::WifiInfoValid()
+bool ParamManager::WifiInfoValid()
 {
     byte validation = EEPROM.read(WIFI_INFO_VALID_OFFSET);
-    return validation == WIFI_INFO_VALID_MAGIC;
+    return validation == USER_DATA_VALID_MAGIC;
 }
 
-void UserData::ConfirmWifiData()
+void ParamManager::ConfirmWifiData()
 {
-    EEPROM.write(WIFI_INFO_VALID_OFFSET, WIFI_INFO_VALID_MAGIC);
+    EEPROM.write(WIFI_INFO_VALID_OFFSET, USER_DATA_VALID_MAGIC);
     EEPROM.commit();
 }
 
-String UserData::GetWifiSsid()
+String ParamManager::GetWifiSsid()
 {
     return ReadEepromString(WIFI_SSID_VALID);
 }
 
-void UserData::SetWifiSsid(String ssid)
+void ParamManager::SetWifiSsid(String ssid)
 {
     return WriteEepromString(ssid, WIFI_SSID_VALID);
 }
 
-String UserData::GetWifiPasswd()
+String ParamManager::GetWifiPasswd()
 {
     return ReadEepromString(WIFI_PASSWORD_OFFSET);
 }
 
-void UserData::SetWifiPasswd(String password)
+void ParamManager::SetWifiPasswd(String password)
 {
     return WriteEepromString(password, WIFI_PASSWORD_OFFSET);
 }

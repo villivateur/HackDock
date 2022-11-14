@@ -1,30 +1,15 @@
 #include <Arduino.h>
 
-enum RunMode
-{
-    RunMode_Start = 0x20,
 
-    RunMode_Usb = RunMode_Start,
-    RunMode_Online,
-    RunMode_Local,
-
-    RunMode_End,
-};
-
-class UserData
+class ParamManager
 {
 private:
     String ReadEepromString(uint32_t offset);
     void WriteEepromString(String data, uint32_t offset);
-    byte mode;
 
 public:
-    UserData();
+    ParamManager();
     void EraseAllData();
-
-    RunMode GetRunMode();
-    void SetRunMode(RunMode mode);
-    void SwitchRunMode();
 
     bool WifiInfoValid();
     void ConfirmWifiData();

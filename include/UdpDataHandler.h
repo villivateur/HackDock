@@ -14,10 +14,10 @@ struct UdpData
     uint32_t netReceiveRate;
 };
 
-class LocalConnector
+class UdpDataHandler
 {
 public:
-    LocalConnector();
+    UdpDataHandler();
     void FetchNewData();
     UdpData* data;
 

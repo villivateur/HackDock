@@ -4,9 +4,10 @@
 class FuncButton
 {
 private:
-    uint8_t pressedTime;
     Ticker scanner;
+    uint32_t lastPressTimeMs;
 
 public:
     FuncButton();
+    uint32_t MsSinceLastPress();
 };

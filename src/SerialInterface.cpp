@@ -21,3 +21,8 @@ SerialInterface::SerialInterface()
     dataBuff = (uint8_t*)&data;
     receiver.attach(0.5, Receive);
 }
+
+void SerialInterface::Init()
+{
+
+}

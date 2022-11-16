@@ -7,8 +7,10 @@ class FuncButton
 {
 private:
     Ticker scanner;
+    Ticker trigger;
     uint32_t lastPressTimeMs;
     void Scan();
+    void Task();
 
 public:
     FuncButton();

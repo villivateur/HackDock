@@ -3,12 +3,10 @@
 #include "UdpInterface.h"
 #include "LedPanel.h"
 #include "Beep.h"
-#include "ParamManager.h"
 #include "FuncButton.h"
 
 LedPanel ledPanel;
 Beep beep;
-ParamManager paramManager;
 FuncButton funcButton;
 
 SerialInterface serialInterface;

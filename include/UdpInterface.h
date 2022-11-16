@@ -5,7 +5,7 @@
 #include <WiFiUdp.h>
 #include <Ticker.h>
 
-#include "NetProtocal.h"
+#include "Protocals.h"
 
 class UdpInterface
 {
@@ -15,7 +15,7 @@ private:
     uint8_t recvBuf[64];
     uint8_t sendBuf[64];
     void UdpTask();
-    void DataHandler(RequestPackage* package);
+    void DataHandler(UdpRequest* package);
     void SendResponse(uint32_t packageId, RESPOND_CODE code, uint32_t value);
 
 public:

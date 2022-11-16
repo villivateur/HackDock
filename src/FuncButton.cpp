@@ -30,7 +30,7 @@ void FuncButton::Scan()
 
 void FuncButton::Task()
 {
-    if (lastPressTimeMs < BUTTON_TASK_PEROID) {
+    if (MsSinceLastPress() < BUTTON_TASK_PEROID) {
         beep.SetStatus(BeepStatus::Off);
     }
 }

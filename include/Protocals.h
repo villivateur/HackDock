@@ -6,11 +6,8 @@
 
 enum class REQUEST_CMD : uint8_t
 {
-    READ_CMD = 0,
-    READ_RESP = 1,
-
-    WRITE_CMD = 2,
-    WRITE_RESP = 3,
+    READ = 0,
+    WRITE = 1,
 };
 
 enum class RESPOND_CODE : uint8_t
@@ -22,7 +19,7 @@ enum class RESPOND_CODE : uint8_t
     OTHER_ERROR,
 };
 
-struct RequestPackage
+struct UdpRequest
 {
     uint32_t packageId;
     REQUEST_CMD cmd;
@@ -30,11 +27,19 @@ struct RequestPackage
     uint32_t value;
 };
 
-struct ResponsePackage
+struct UdpResponse
 {
     uint32_t packageId;
     RESPOND_CODE code;
     uint32_t value;
+};
+
+struct SerialRequest
+{
+    REQUEST_CMD cmd;
+    uint8_t subCmd;
+    uint32_t length; // include cmd and subCmd;
+    uint8_t buf[1]; // Dynamic size
 };
 
 #pragma pack(pop)

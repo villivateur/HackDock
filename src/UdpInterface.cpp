@@ -23,43 +23,43 @@ void UdpInterface::UdpTask()
 {
     int packetSize = Udp.parsePacket();
     if (packetSize) {
-        int len = Udp.read(recvBuf, sizeof(RequestPackage));
-        if (len != sizeof(RequestPackage)) {
+        int len = Udp.read(recvBuf, sizeof(UdpRequest));
+        if (len != sizeof(UdpRequest)) {
             SendResponse(0, RESPOND_CODE::BAD_REQUEST, 0);
             return;
         }
-        DataHandler((RequestPackage*)recvBuf);
+        DataHandler((UdpRequest*)recvBuf);
     }
 }
 
-void UdpInterface::DataHandler(RequestPackage* package)
+void UdpInterface::DataHandler(UdpRequest* package)
 {
     uint32_t actionMap = COMBINE(package->cmd, package->index);
 
     switch (actionMap)
     {
-    case COMBINE(REQUEST_CMD::READ_CMD, 0x0000): // Ping
+    case COMBINE(REQUEST_CMD::READ, 0x0000): // Ping
         SendResponse(package->packageId, RESPOND_CODE::OK, 0x19260817);
         break;
-    case COMBINE(REQUEST_CMD::READ_CMD, 0x0001): // Product ID
+    case COMBINE(REQUEST_CMD::READ, 0x0001): // Product ID
         SendResponse(package->packageId, RESPOND_CODE::OK, 27);
         break;
-    case COMBINE(REQUEST_CMD::READ_CMD, 0x0002): // Serial Num
+    case COMBINE(REQUEST_CMD::READ, 0x0002): // Serial Num
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);
         break;
-    case COMBINE(REQUEST_CMD::WRITE_CMD, 0x1000): // LED0
+    case COMBINE(REQUEST_CMD::WRITE, 0x1000): // LED0
         ledPanel.SetLed(0, (LedBlinkRate)package->value);
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);
         break;
-    case COMBINE(REQUEST_CMD::WRITE_CMD, 0x1001): // LED1
+    case COMBINE(REQUEST_CMD::WRITE, 0x1001): // LED1
         ledPanel.SetLed(1, (LedBlinkRate)package->value);
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);
         break;
-    case COMBINE(REQUEST_CMD::WRITE_CMD, 0x1010): // Beep
+    case COMBINE(REQUEST_CMD::WRITE, 0x1010): // Beep
         beep.SetStatus((BeepStatus)package->value);
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);
         break;
-    case COMBINE(REQUEST_CMD::READ_CMD, 0x2000): // Button
+    case COMBINE(REQUEST_CMD::READ, 0x2000): // Button
         SendResponse(package->packageId, RESPOND_CODE::OK, funcButton.MsSinceLastPress());
         break;
     default:
@@ -70,13 +70,13 @@ void UdpInterface::DataHandler(RequestPackage* package)
 
 void UdpInterface::SendResponse(uint32_t packageId, RESPOND_CODE code, uint32_t value)
 {
-    ResponsePackage package {
+    UdpResponse package {
         .packageId = packageId,
         .code = code,
         .value = value,
     };
 
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-    Udp.write((uint8_t*)&package, sizeof(ResponsePackage));
+    Udp.write((uint8_t*)&package, sizeof(UdpResponse));
     Udp.endPacket();
 }

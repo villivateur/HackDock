@@ -23,7 +23,7 @@ void setup()
         udpInterface.Init();
     }
 
-    serialInterface.Init();
+    // serialInterface.Init();
 
     delay(2000);
 }

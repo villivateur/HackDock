@@ -1,28 +1,38 @@
 #include "SerialInterface.h"
 
-static uint8_t* dataBuff;
-
-static void Receive()
-{
-    static uint8_t raw[sizeof(UsbData) + 4];
-    Serial.readBytes(raw, sizeof(UsbData) + 4);
-    if (raw[0] == 0x19 && raw[1] == 0x26 && raw[2] == 0x08 && raw[3] == 0x17) {
-        uint8_t pongBuf[2] = { 0x68, 0x61 };
-        Serial.write(pongBuf, 2);
-    } else if (raw[0] == 0x66 && raw[1] == 0x77 && raw[2] == 0xaa && raw[3] == 0xff) {
-        memcpy(dataBuff, raw + 4, sizeof(UsbData));
-    }
-}
-
 SerialInterface::SerialInterface()
 {
-    memset(&data, 0, sizeof(UsbData));
-    Serial.setTimeout(100);
-    dataBuff = (uint8_t*)&data;
-    receiver.attach(0.5, Receive);
+    Serial.begin(115200);
+    halfReceived = false;
 }
 
 void SerialInterface::Init()
 {
+    ticker.attach_ms(50, std::bind(&SerialInterface::SerialTask, this));
+}
 
+void SerialInterface::SerialTask()
+{
+    while (Serial.available()) {
+        buffer.push(Serial.read());
+    }
+
+    while (buffer.size() > 6) {
+        SerialRequest* package = (SerialRequest*)currentBuf;
+        uint8_t* lengthPtr = (uint8_t*)&package->length;
+
+        buffer.pop((uint8_t&)package->cmd);
+        buffer.pop(package->subCmd);
+        buffer.pop(*lengthPtr);
+        buffer.pop(*(lengthPtr + 1));
+        buffer.pop(*(lengthPtr + 2));
+        buffer.pop(*(lengthPtr + 3));
+
+        if (buffer.size() < package->length - 6) {
+            halfReceived = true;
+            return;
+        }
+
+        
+    }
 }

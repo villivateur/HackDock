@@ -2,26 +2,20 @@
 
 #include <Arduino.h>
 #include <Ticker.h>
+#include <RingBuf.h>
+#include "Protocals.h"
 
-struct UsbData
-{
-    uint8_t cpuPercent;
-    uint8_t memPercent;
-    uint8_t disk0Percent;
-    uint8_t disk1Percent;
-    uint32_t diskReadRate;
-    uint32_t diskWriteRate;
-    uint32_t netSentRate;
-    uint32_t netReceiveRate;
-};
 
 class SerialInterface
 {
 private:
-    Ticker receiver;
+    Ticker ticker;
+    RingBuf<uint8_t, 128> buffer;
+    uint8_t currentBuf[128];
+    bool halfReceived;
+    void SerialTask();
 
 public:
-    UsbData data;
     SerialInterface();
     void Init();
 };

@@ -1,9 +1,9 @@
+#pragma once
+
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
 #include <Ticker.h>
 
-struct UdpData
+struct UsbData
 {
     uint8_t cpuPercent;
     uint8_t memPercent;
@@ -15,14 +15,12 @@ struct UdpData
     uint32_t netReceiveRate;
 };
 
-class UdpDataHandler
+class SerialInterface
 {
 public:
-    UdpDataHandler();
-    void UdpTask();
-    Ticker ticker;
-    UdpData* data;
+    SerialInterface();
+    UsbData data;
 
 private:
-    WiFiUDP Udp;
+    Ticker receiver;
 };

@@ -1,4 +1,4 @@
-#include "UsbDataHandler.h"
+#include "SerialInterface.h"
 
 static uint8_t* dataBuff;
 
@@ -14,7 +14,7 @@ static void Receive()
     }
 }
 
-UsbDataHandler::UsbDataHandler()
+SerialInterface::SerialInterface()
 {
     memset(&data, 0, sizeof(UsbData));
     Serial.setTimeout(100);

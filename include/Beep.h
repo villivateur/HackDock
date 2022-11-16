@@ -21,5 +21,6 @@ private:
 
 public:
     Beep();
+    void Init();
     void SetStatus(BeepStatus status);
 };

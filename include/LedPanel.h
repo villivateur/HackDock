@@ -31,5 +31,6 @@ private:
 
 public:
     LedPanel();
+    void Init();
     void SetLed(uint8_t ledNum, LedBlinkRate rate);
 };

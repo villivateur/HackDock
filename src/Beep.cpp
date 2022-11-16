@@ -6,6 +6,10 @@ Beep::Beep()
     digitalWrite(BEEP_PIN, LOW);
 }
 
+void Beep::Init()
+{
+}
+
 void Beep::BeepTask()
 {
     digitalWrite(BEEP_PIN, !digitalRead(BEEP_PIN));     // set pin to the opposite state

@@ -11,6 +11,10 @@ LedPanel::LedPanel()
     }
 }
 
+void LedPanel::Init()
+{
+}
+
 void LedPanel::SetLed(uint8_t ledNum, LedBlinkRate rate)
 {
     LedItem* led;

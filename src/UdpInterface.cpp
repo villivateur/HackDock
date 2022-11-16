@@ -11,8 +11,11 @@ extern FuncButton funcButton;
 
 UdpInterface::UdpInterface()
 {
-    Udp.begin(6666);
+}
 
+void UdpInterface::Init()
+{
+    Udp.begin(6666);
     ticker.attach_ms(50, std::bind(&UdpInterface::UdpTask, this));
 }
 
@@ -35,6 +38,15 @@ void UdpInterface::DataHandler(RequestPackage* package)
 
     switch (actionMap)
     {
+    case COMBINE(REQUEST_CMD::READ_CMD, 0x0000): // Ping
+        SendResponse(package->packageId, RESPOND_CODE::OK, 0x19260817);
+        break;
+    case COMBINE(REQUEST_CMD::READ_CMD, 0x0001): // Product ID
+        SendResponse(package->packageId, RESPOND_CODE::OK, 27);
+        break;
+    case COMBINE(REQUEST_CMD::READ_CMD, 0x0002): // Serial Num
+        SendResponse(package->packageId, RESPOND_CODE::OK, 0);
+        break;
     case COMBINE(REQUEST_CMD::WRITE_CMD, 0x1000): // LED0
         ledPanel.SetLed(0, (LedBlinkRate)package->value);
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);

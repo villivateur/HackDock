@@ -12,5 +12,6 @@ private:
 
 public:
     FuncButton();
+    void Init();
     uint32_t MsSinceLastPress();
 };

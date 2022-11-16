@@ -20,4 +20,5 @@ private:
 
 public:
     UdpInterface();
+    void Init();
 };

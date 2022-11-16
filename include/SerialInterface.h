@@ -17,10 +17,11 @@ struct UsbData
 
 class SerialInterface
 {
-public:
-    SerialInterface();
-    UsbData data;
-
 private:
     Ticker receiver;
+
+public:
+    UsbData data;
+    SerialInterface();
+    void Init();
 };

@@ -6,7 +6,11 @@
 
 FuncButton::FuncButton()
 {
-    pinMode(FUNC_BTN, INPUT);    
+    pinMode(FUNC_BTN, INPUT);
+}
+
+void FuncButton::Init()
+{
     scanner.attach_ms(1, std::bind(&FuncButton::Scan, this));
 }
 

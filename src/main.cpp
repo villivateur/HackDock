@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "WifiConnector.h"
 #include "SerialInterface.h"
 #include "UdpInterface.h"
 #include "LedPanel.h"
@@ -14,22 +15,17 @@ UdpInterface udpInterface;
 
 void setup()
 {
-    Serial.begin(115200);
-    beep.SetStatus(BeepStatus::Drip);
-    ledPanel.SetLed(0, LedBlinkRate::Rate8Hz);
-    ledPanel.SetLed(1, LedBlinkRate::Rate0_5Hz);
+    ledPanel.Init();
+    beep.Init();
+    funcButton.Init();
 
+    if (ConnectWifi() == OK) {
+        udpInterface.Init();
+    }
 
-    // WiFi.begin(paramManager.GetWifiSsid(), paramManager.GetWifiPasswd());
-    // ledPanel.SetLed(0, LedBlinkRate::Rate8Hz);
-    // while (WiFi.status() != WL_CONNECTED)
-    // {
-    //     delay(1000);
-    // }
-    // ledPanel.SetLed(0, LedBlinkRate::RateAlwaysOff);
+    serialInterface.Init();
 
     delay(2000);
-
 }
 
 void loop()

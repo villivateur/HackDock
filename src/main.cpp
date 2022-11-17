@@ -5,6 +5,7 @@
 #include "LedPanel.h"
 #include "Beep.h"
 #include "FuncButton.h"
+#include "EepromUtils.h"
 
 LedPanel ledPanel;
 Beep beep;
@@ -15,6 +16,7 @@ UdpInterface udpInterface;
 
 void setup()
 {
+    EepromUtils::Init();
     ledPanel.Init();
     beep.Init();
     funcButton.Init();
@@ -22,8 +24,7 @@ void setup()
     if (ConnectWifi() == OK) {
         udpInterface.Init();
     }
-
-    // serialInterface.Init();
+    serialInterface.Init();
 
     delay(2000);
 }

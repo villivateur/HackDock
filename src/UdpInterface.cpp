@@ -2,9 +2,11 @@
 #include "LedPanel.h"
 #include "Beep.h"
 #include "FuncButton.h"
+#include "CustomPin.h"
 
 extern LedPanel ledPanel;
 extern Beep beep;
+extern CustomPin customPin;
 extern FuncButton funcButton;
 
 #define COMBINE(x, y) (((uint32_t)(x)) << 16) | ((uint32_t)(y))
@@ -57,6 +59,14 @@ void UdpInterface::DataHandler(UdpRequest* package)
         break;
     case COMBINE(REQUEST_CMD::WRITE, 0x1010): // Beep
         beep.SetStatus((BeepStatus)package->value);
+        SendResponse(package->packageId, RESPOND_CODE::OK, 0);
+        break;
+    case COMBINE(REQUEST_CMD::WRITE, 0x1020): // Custom Pin 0
+        customPin.SetStatus(0, package->value);
+        SendResponse(package->packageId, RESPOND_CODE::OK, 0);
+        break;
+    case COMBINE(REQUEST_CMD::WRITE, 0x1021): // Custom Pin 1
+        customPin.SetStatus(1, package->value);
         SendResponse(package->packageId, RESPOND_CODE::OK, 0);
         break;
     case COMBINE(REQUEST_CMD::READ, 0x2000): // Button

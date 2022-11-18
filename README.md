@@ -2,7 +2,9 @@
 
 *A cute box for pushing notice from servers to reality. For developers!*
 
-## Usage
+Runs on ESP8266 with Arduino Framework via PlatformIO.
+
+## Features
 
 You can configure HackDock's parameters by Serial communication.
 
@@ -32,3 +34,4 @@ You can also read button status with UDP.
 - [x] UDP communication
 - [x] Push button to mute
 - [ ] Watchdog
+- [ ] More error code

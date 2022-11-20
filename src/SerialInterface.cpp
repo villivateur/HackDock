@@ -68,26 +68,43 @@ void SerialInterface::ParseCmd(String cmd)
 {
     if (cmd == "STARTCONFIG") {
         Serial.println("Not implement");
+
     } else if (cmd == "SAVECONFIG") {
         EepromUtils::Save();
         Serial.println("Saved");
+
     } else if (cmd.startsWith("SETSN") && cmd[strlen("SETSN")] == '=') {
         Serial.println("Not implement");
+
     } else if (cmd.startsWith("SETSSID") && cmd[strlen("SETSSID")] == '=') {
         EepromUtils::WriteString(EEPROM_WIFI_SSID_OFFSET, "##"+cmd.substring(strlen("SETSSID") + 1));
         Serial.println("SSID: " + cmd.substring(strlen("SETSSID") + 1));
+
     } else if (cmd.startsWith("SETPASS") && cmd[strlen("SETPASS")] == '=') {
         EepromUtils::WriteString(EEPROM_WIFI_PASSWORD_OFFSET, "##"+cmd.substring(strlen("SETPASS") + 1));
         Serial.println("Password: " + cmd.substring(strlen("SETPASS") + 1));
+
     } else if (cmd.startsWith("SETIP") && cmd[strlen("SETIP")] == '=') {
         EepromUtils::WriteString(EEPROM_WIFI_IP_OFFSET, "##"+cmd.substring(strlen("SETIP") + 1));
         Serial.println("IP: " + cmd.substring(strlen("SETIP") + 1));
+
     } else if (cmd.startsWith("SETNETMASK") && cmd[strlen("SETNETMASK")] == '=') {
         EepromUtils::WriteString(EEPROM_WIFI_NETMASK_OFFSET, "##"+cmd.substring(strlen("SETNETMASK") + 1));
         Serial.println("Net mask: " + cmd.substring(strlen("SETNETMASK") + 1));
+
     } else if (cmd.startsWith("SETGATEWAY") && cmd[strlen("SETGATEWAY")] == '=') {
         EepromUtils::WriteString(EEPROM_WIFI_GATEWAY_OFFSET, "##"+cmd.substring(strlen("SETGATEWAY") + 1));
         Serial.println("Gateway: " + cmd.substring(strlen("SETGATEWAY") + 1));
+
+    } else if (cmd.startsWith("CLEARCONFIG")) {
+        EepromUtils::WriteString(EEPROM_WIFI_SSID_OFFSET, "xxx");
+        EepromUtils::WriteString(EEPROM_WIFI_PASSWORD_OFFSET, "xxx");
+        EepromUtils::WriteString(EEPROM_WIFI_IP_OFFSET, "xxx");
+        EepromUtils::WriteString(EEPROM_WIFI_NETMASK_OFFSET, "xxx");
+        EepromUtils::WriteString(EEPROM_WIFI_GATEWAY_OFFSET, "xxx");
+        EepromUtils::Save();
+        Serial.println("Config cleared");
+
     } else {
         Serial.println("Bad Command");
     }

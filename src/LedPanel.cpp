@@ -38,15 +38,12 @@ void LedPanel::SetLed(uint8_t ledNum, LedBlinkRate rate)
         digitalWrite(led->pin, LOW);
         break;
     case LedBlinkRate::Rate8Hz:
-        Serial.println("Rate8Hz");
         led->ticker.attach_ms(62, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));}); // 62.5ms is not allowed
         break;
     case LedBlinkRate::Rate2Hz:
-        Serial.println("Rate2Hz");
         led->ticker.attach_ms(250, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));});
         break;
     case LedBlinkRate::Rate0_5Hz:
-        Serial.println("Rate0_5Hz");
         led->ticker.attach_ms(1000, [led]() {digitalWrite(led->pin, !digitalRead(led->pin));});
         break;
     case LedBlinkRate::RateAlwaysOff:

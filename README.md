@@ -27,7 +27,7 @@ You can also read button status with UDP.
 
 - [x] LED Blink
 - [x] Beep
-- [ ] Custom pins
+- [x] Custom pins
 - [x] Button
 - [x] Wifi connect
 - [x] Serial communication

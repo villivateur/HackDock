@@ -105,6 +105,9 @@ void SerialInterface::ParseCmd(String cmd)
         EepromUtils::Save();
         Serial.println("Config cleared");
 
+    } else if (cmd.startsWith("REBOOT")) {
+        ESP.reset();
+
     } else {
         Serial.println("Bad Command");
     }
